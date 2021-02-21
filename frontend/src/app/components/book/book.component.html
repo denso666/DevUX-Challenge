@@ -1,6 +1,15 @@
-<tr>
-    <th scope="row">{{ book.id }}</th>
-    <td>{{ book.name }}</td>
-    <td>{{ book.author }}</td>
-    <td>{{ book.publication_date }}</td>
-</tr>
+<div class="flex">
+    <div class="card text-center" style="width: 80%;">
+        <div class="card-header">
+            {{ book.author }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title font-italic">"{{ book.name }}"</h5>
+            <p class="card-text">A simple description of this book</p>
+        </div>
+        <div class="card-footer text-muted">
+            {{ book.publication_date }}
+        </div>
+    </div>
+    <a href="/books" class="btn btn-success mt-2">Return</a>
+</div>
