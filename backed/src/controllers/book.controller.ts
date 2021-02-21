@@ -28,22 +28,20 @@ bookCtrll.post = async ({ request, response }: Context) => {
         const body: iBook = await request.body().value;
         const date = new Date();
 
-        const result = await client.execute('insert into Book(id,name,author,publication_date) values(?,?,?,?)', [
+        await client.execute('insert into Book(id,name,author,publication_date) values(?,?,?,?)', [
             0,
             body.name,
             body.author,
             `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`
-        ]);
-
-        // no error
-        if (result.affectedRows) response.body = {"post":"true"};
-
-        // probably frontend error, no posible duplicated id
-        else response.body = {post:"false"};
+        ])
+        .catch(e => {
+            if ( e ) response.body = {post:"false", message:"Posible format error"}; 
+            else response.body = {post:"true"};
+        });
     }
     catch (error) {
         console.log(error);
-        response.body = {post:"false"};
+        response.body = {post:"false", message:"DB_ERROR"};
     }
 }
 
@@ -58,7 +56,7 @@ bookCtrll.update = async ({ request, response }: Context) => {
             body.id
         ]);
         if (result.affectedRows) response.body = {update:"true"};
-        else response.body = {update:"false"};
+        else response.body = {update:"false", message:"Posible query format"};
     }
     catch (error) {
         console.log(error);
@@ -70,13 +68,12 @@ bookCtrll.update = async ({ request, response }: Context) => {
 bookCtrll.delete = async ({ response, params }: Context|any) => {
     try {
         const result = await client.execute('delete from Book where id = ?', [params.id]);
-
         if (result.affectedRows) response.body = {delete:"true"};
-        else response.body = {delete:"false"};
+        else response.body = {delete:"false", message:"Id not existing"};
     }
     catch (error) {
         console.log(error);
-        response.body = {delete:"false"};
+        response.body = {delete:"false", message:"DB_ERROR"};
     }
 }
 

@@ -4,6 +4,7 @@ import client from '../db/conection.ts';
 
 const humanCtrll: any = {};
 
+// get one or all humans
 humanCtrll.get = async ({ response, params }: Context|any ) => {
     try {
         let result:any;
@@ -20,7 +21,7 @@ humanCtrll.get = async ({ response, params }: Context|any ) => {
     }
 }
 
-// post one admin
+// post one human
 humanCtrll.post = async ({ request, response }: Context) => {
     try {
         const body: iHuman = await request.body().value;
@@ -39,5 +40,34 @@ humanCtrll.post = async ({ request, response }: Context) => {
     }
 }
 
+// update human
+humanCtrll.update = async ({ request, response }: Context) => {
+    try {
+        const body: iHuman = await request.body().value;
+        const result = await client.execute('update Human set name=? where id=?',[
+            body.name,
+            body.id
+        ]);
+        if (result.affectedRows) response.body = {update:"true"};
+        else response.body = {update:"false", message:"Posible format error"}; 
+    }
+    catch (error) {
+        console.log(error);
+        response.body = {update:"false", message:"DB_ERROR"};
+    }
+}
+
+// delete one human
+humanCtrll.delete = async ({ response, params }: Context|any) => {
+    try {
+        const result = await client.execute('delete from Human where id = ?', [params.id]);
+        if (result.affectedRows) response.body = {delete:"true"};
+        else response.body = {delete:"false", message:"Id not existing"};
+    }
+    catch (error) {
+        console.log(error);
+        response.body = {delete:"false", message:"DB_ERROR"};
+    }
+}
 
 export default humanCtrll;
