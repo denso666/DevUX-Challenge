@@ -3,12 +3,12 @@ import { iBook } from '../interfaces/book.interface.ts';
 import client from '../db/conection.ts';
 
 //  object
-const bookCtrll:any = {};
+const bookCtrll: any = {};
 
-// get one or all admins
+// get one or all books in db
 bookCtrll.get = async ({ response, params }: Context|any ) => {
     try {
-        let result:any;
+        let result: any;
         if (params.id) {
             result = await client.query('select * from Book where id=?',[params.id]);
         } else {
@@ -22,13 +22,12 @@ bookCtrll.get = async ({ response, params }: Context|any ) => {
     }
 }
 
-// post one admin
+// post one book
 bookCtrll.post = async ({ request, response }: Context) => {
     try {
         const body: iBook = await request.body().value;
-        console.log(body);
-
         const date = new Date();
+
         const result = await client.execute('insert into Book(id,name,author,publication_date) values(?,?,?,?)', [
             0,
             body.name,
@@ -36,19 +35,19 @@ bookCtrll.post = async ({ request, response }: Context) => {
             `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`
         ]);
 
-        if (result.affectedRows) {
-            response.body = {"post":"true"};
-        } else {
-            response.body = {"post":"false"};
-        }
+        // no error
+        if (result.affectedRows) response.body = {"post":"true"};
+
+        // probably frontend error, no posible duplicated id
+        else response.body = {post:"false"};
     }
     catch (error) {
         console.log(error);
-        response.body = {"post":"false"};
+        response.body = {post:"false"};
     }
 }
 
-// update admin
+// update book
 bookCtrll.update = async ({ request, response }: Context) => {
     try {
         const body: iBook = await request.body().value;
@@ -58,32 +57,26 @@ bookCtrll.update = async ({ request, response }: Context) => {
             body.publication_date,
             body.id
         ]);
-        if (result.affectedRows) {
-            response.body = {"update":"true"};
-        } else {
-            response.body = {"update":"false"};
-        }
+        if (result.affectedRows) response.body = {update:"true"};
+        else response.body = {update:"false"};
     }
     catch (error) {
         console.log(error);
-        response.body = {"update":"false"};
+        response.body = {update:"false"};
     }
 }
 
-// delete one admin
+// delete one book
 bookCtrll.delete = async ({ response, params }: Context|any) => {
     try {
-        let result = await client.execute('delete from Book where id = ?', [params.id]);
+        const result = await client.execute('delete from Book where id = ?', [params.id]);
 
-        if (result.affectedRows) {
-            response.body = {"delete":"true"};
-        } else {
-            response.body = {"delete":"false"};
-        }
+        if (result.affectedRows) response.body = {delete:"true"};
+        else response.body = {delete:"false"};
     }
     catch (error) {
         console.log(error);
-        response.body = {"delete":"false"};
+        response.body = {delete:"false"};
     }
 }
 

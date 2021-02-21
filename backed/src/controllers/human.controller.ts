@@ -20,5 +20,24 @@ humanCtrll.get = async ({ response, params }: Context|any ) => {
     }
 }
 
+// post one admin
+humanCtrll.post = async ({ request, response }: Context) => {
+    try {
+        const body: iHuman = await request.body().value;
+        await client.execute('insert into Human(id,name,email) values(?,?,?)', [
+            0,
+            body.name,
+            body.email
+        ]).catch(e => {
+            if ( e ) response.body = {post:"false", message:"Duplicated email"};
+            else response.body = {post:"true"};
+        });
+    }
+    catch (error) {
+        console.log(error);
+        response.body = {post:"false", message:"DB_ERROR"};
+    }
+}
+
 
 export default humanCtrll;

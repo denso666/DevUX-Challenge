@@ -5,6 +5,7 @@ const HumanRouter: Router = new Router();
 
 HumanRouter
     .get('/humans', HumanCtrll.get)
-    .get('/humans/:id', HumanCtrll.get);
+    .get('/humans/:id', HumanCtrll.get)
+    .post('/humans', HumanCtrll.post);
 
 export default HumanRouter;
