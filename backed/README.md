@@ -1,3 +1,3 @@
 # Library API
 
-## Created to a chanllenge { DevUx } 
+## Created to a challenge { DevUx } 
