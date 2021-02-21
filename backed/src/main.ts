@@ -6,13 +6,17 @@ import { config } from "https://deno.land/x/dotenv/mod.ts";
 import BookRouter from './routes/book.routes.ts';
 import HumanRouter from './routes/human.routes.ts';
 
+// middlewares
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
+
 
 // app
 const app = new Application();
 
 
-// config enviroment variables
+// config
 const env = config({export:true});
+app.use(oakCors());
 
 
 // routes

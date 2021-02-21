@@ -1,0 +1,20 @@
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Author</th>
+            <th scope="col">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let book of books">
+            <th scope="row">{{ book.id }}</th>
+            <td style="font-size: larger;">
+                <a href="/books/{{book.id}}">{{ book.name }}</a>
+            </td>
+            <td class="font-italic">{{ book.author }}</td>
+            <td>{{ book.publication_date }}</td>
+        </tr>
+    </tbody>
+</table>
